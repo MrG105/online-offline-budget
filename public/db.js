@@ -6,10 +6,7 @@ const request = indexedDB.open('budgetDB', 1);
 
 request.onupgradeneeded = function (event) {
     db = event.target.results;
-
-    if (db.objectStoreNames.length === 0) {
-        db.createObjectStore('budgetStore', { autoIncrement: true });
-    }
+    db.createObjectStore('budgetDB', { keyPath: "_id" });
 
 };
 
@@ -22,17 +19,17 @@ request.onerror = function (event) {
 
 
 function checkDatabase() {
-    let transaction = db.transation(['budgetStore'], 'readwrite');
+    let transaction = db.transaction(['budgetStore'], 'readwrite');
 
     const store = transaction.objectStore('budgetStore');
 
-    const getAll = store.getAll();
+    const all = store.getAll();
 
-    getAll.onsuccess = function () {
-        if(getAll.result.length > 0) {
+    all.onsuccess = function () {
+        if(all.result.length > 0) {
             fetch('/api/transaction/bulk', {
                 method: 'POST',
-                body: JSON.stringify(getAll.result),
+                body: JSON.stringify(all.result),
                 headers: {
                     Accept: 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
