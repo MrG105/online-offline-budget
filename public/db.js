@@ -6,7 +6,7 @@ const request = indexedDB.open('budgetDB', 1);
 
 request.onupgradeneeded = function (event) {
     db = event.target.results;
-    db.createObjectStore('budgetDB', { keyPath: "_id" });
+    db.createObjectStore('budgetDB', { autoincrement: true });
 
 };
 
